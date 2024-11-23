@@ -3,36 +3,44 @@ package lk.iit.javacli;
 
 import java.util.Random;
 
-public class Vendor implements Runnable {
+public class Vender implements Runnable {
     private final TicketPool ticketPool;
-    private final int ticketReleaseRate; // Time interval between ticket additions in milliseconds
+    private final int ticketReleaseRate;
     private final Random random;
+    private final int vendorId; // Unique ID for the vendor
 
-    public Vendor(TicketPool ticketPool, int ticketReleaseRate) {
+    public Vender(TicketPool ticketPool, int ticketReleaseRate, int vendorId) {
         this.ticketPool = ticketPool;
         this.ticketReleaseRate = ticketReleaseRate;
         this.random = new Random();
+        this.vendorId = vendorId;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                // Generate a random ticket ID
-                int ticketId = random.nextInt(1000); // ID range: 0 to 999
+                int ticketId = random.nextInt(1000); // Generate random ticket ID
                 Ticket ticket = new Ticket(ticketId);
 
                 // Add the ticket to the pool
-                ticketPool.addTicket(ticket); // This will wait if the pool is full
-                System.out.println("Vendor added ticket: " + ticketId);
+                ticketPool.addTicket(ticket);
+                System.out.println("Vender [" + vendorId + "] added ticket: " + ticketId);
 
                 // Wait before adding the next ticket
                 Thread.sleep(ticketReleaseRate);
             } catch (InterruptedException e) {
-                System.out.println("Vendor thread interrupted.");
+                System.out.println("Vender [" + vendorId + "] thread interrupted.");
                 Thread.currentThread().interrupt();
                 break;
             }
         }
     }
 }
+
+
+
+
+
+
+
